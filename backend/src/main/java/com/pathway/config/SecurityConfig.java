@@ -1,6 +1,8 @@
 package com.pathway.config;
 
 import com.pathway.security.JwtAuthFilter;
+import com.pathway.security.JwtService;
+import com.pathway.repo.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -71,6 +73,11 @@ public class SecurityConfig {
      * JwtAuthFilter must run only inside Spring Security's filter chain.
      * Spring Boot otherwise auto-registers this @Component filter as a servlet filter too.
      */
+    @Bean
+    JwtAuthFilter jwtAuthFilter(JwtService jwtService, UserRepository users) {
+        return new JwtAuthFilter(jwtService, users);
+    }
+
     @Bean
     FilterRegistrationBean<JwtAuthFilter> jwtAuthFilterRegistration(JwtAuthFilter filter) {
         FilterRegistrationBean<JwtAuthFilter> registration = new FilterRegistrationBean<>(filter);
